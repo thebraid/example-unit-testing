@@ -13,8 +13,7 @@ const makePotionsShelve = (initStore = [], fetcher = fetch) => {
                 return;
             }
 
-            const potion = this.store[potionIndex];
-            this.store.splice(potionIndex, 1);
+            const [potion] = this.store.splice(potionIndex, 1);
 
             return potion;
         },

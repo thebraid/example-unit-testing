@@ -24,7 +24,20 @@ describe('makePotionsShelve', () => {
         expect(shelve.store.map(potion => potion.name)).toContain('Оборотное зелье');
     })
 
-    it('Данные загружаются от сервера', async () => {
+    it('Метод "load" загружает данные от сервера', async () => {
+        // подготовка
+        const myFetch = jest.fn(() => Promise.resolve([{ name: 'Оборотное зелье' }]))
+        // const myFetch = () => Promise.resolve([{ name: 'Оборотное зелье' }]);
+        const shelve = makePotionsShelve([], myFetch);
+
+        // действие
+        await shelve.load();
+
+        expect(myFetch).toBeCalled();
+        expect(shelve.store).toHaveLength(1);
+    })
+
+    it('Метод "load" загружает данные от сервера', async () => {
         // подготовка
         const fetcher = jest.fn(() => Promise.resolve([{ name: 'Оборотное зелье' }]));
         const shelve = makePotionsShelve([], fetcher);
@@ -36,7 +49,7 @@ describe('makePotionsShelve', () => {
         expect(shelve.store).toHaveLength(1);
     })
 
-    it('Данные выгружаются на сервер', async () => {
+    it('Метод "sync" загружает данные на сервер', async () => {
         // подготовка
         const fetcher = jest.fn();
         const shelve = makePotionsShelve([], fetcher);
@@ -45,7 +58,7 @@ describe('makePotionsShelve', () => {
         shelve.add({ name: 'Оборотное зелье' });
         await shelve.sync();
 
-        // проверка результата
+        // проверка результата, где
         // 0 - порядковый номер запроса
         // 1 - порядковый номер аргумента функции
         const body = JSON.parse(fetcher.mock.calls[0][1].body);
